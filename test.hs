@@ -24,32 +24,30 @@ maskPat n l x = do
 --maskPat' n l (x, y) = (take l x, (maskPat' (n-1) l (reOrgList l x), 0))
 
 
--- simple cellular automata
-
--- later: fix pattern length due to spaces here ->5 means 3 chars 
-nextCA x = take 3 x
+-- simple CELLULAR AUTOMATA
 
 -- pattern matching for one CA rule -> can it be automated?
-
-caPat "000" = "1"
+caPat "000" = "0"
 caPat "001" = "0"
 caPat "010" = "1"
-caPat "100" = "0"
-caPat "011" = "1"
-caPat "110" = "0"
-caPat "101" = "1"
-caPat "111" = "0"
-
-caAround x = (caPat (nextCA x))
-
---iterCA 0 x = return[x]
---iterCA n x = do
-  --caPat x ++ iterCA (n-1) x
+caPat "100" = "1"
+caPat "011" = "0"
+caPat "110" = "1"
+caPat "101" = "0"
+caPat "111" = "1"
 
 
-something (x,y) = (take 3 x, drop 3 x ++ take 3 x)
+-- very simple CA routine > take 3 elements of a pattern, look up rule and append result to old, reduced pattern
+baseCA (x,y) = (take 3 x, tail x ++ caPat (take 3 x))
+iterCA 0 x = return()
+iterCA n x = do
+  --print(fst (baseCA (x,0)))
+  print(snd (baseCA (x,0)))
+  iterCA (n-1) (snd (baseCA (x,0)))
 
-someIter 0 (x,y) = return(([], []))
-someIter n (x,y) = do
-  something(x, y)
-  someIter (n-1) (snd (something (x,y)), y)
+-- simplified
+baseCA' x = tail x ++ caPat (take 3 x)
+iterCA' 0 x = return()
+iterCA' n x = do
+  print(baseCA' x)
+  iterCA' (n-1) (baseCA' x)
