@@ -17,13 +17,13 @@ maskPat' o l x = take l (drop o x)
 
 -- empties out a long pattern and then stops
 maskIterNew l x = if length x > l then do
-  print(maskPat' 0 l x)
+  print (maskPat' 0 l x)
   maskIterNew l (drop l x)
   else return () 
 
 -- runs forever (remove print in final version)
 maskIter' n x = do
-  (maskPat n x)
+  print(maskPat n x)
   maskIter' n (reOrgList n x)
  
 --maskIter 0 l x = print (take l x)
