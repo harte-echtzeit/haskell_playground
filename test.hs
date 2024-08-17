@@ -97,7 +97,30 @@ expandList x = last x:x ++ [head x]
 twoDca x y = if length x < 3 then reverse y else twoDca (tail x) (caPat (take 3 x):y)
 
 -- only for display purposes
-iterTwoD 0 x = return()
+--iterTwoD 0 x = return()
+--iterTwoD n x = do
+  --print (twoDca (expandList x) [])
+  --iterTwoD (n-1) (twoDca (expandList x) [])
+
+
+-- iter a number of times and return the last pattern
+iterTwoD 0 x = return(x)
 iterTwoD n x = do
-  print (twoDca (expandList x) [])
-  iterTwoD (n-1) (twoDca (expandList x) [])
+   iterTwoD (n-1) (twoDca (expandList x) [])
+
+char2bool x = if x == "1" then True else False
+
+-- convolution tests
+
+autoCorr_base x y = sum(zipWith (*) x y)
+
+autoCorr_move x y n = if length x > 0 then do
+  autoCorr_move (init x) (tail y) ([autoCorr_base x y] ++ n)
+  else return n
+
+autoCorr_move' x y n = autoCorr_move (reverse x) (reverse y) n
+
+corr_filt seq filt = if length seq >= length filt then do
+  print(autoCorr_base (take (length filt) seq) filt)
+  corr_filt (tail seq) filt
+  else return()
